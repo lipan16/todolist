@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<title>todo list</title>
+	<style>
+        .completed {
+            text-decoration: line-through;
+        }
+
+        .selected {
+            color: red;
+        }
+
+        .todoList {
+            margin: 15px 0;
+            display: flex;
+        }
+
+        .title {
+            width: 100px;
+        }
+	</style>
+</head>
+<body>
+<div id="todo-app">
+	<div>
+		<input type="button" value="全部标为完成"/>
+		<input type="text" placeholder="添加 todo" v-model="newTodoTitle" @keyup.enter="addTodo"/>
+	</div>
+
+	<!-- todo list -->
+	<div class="todoList" v-for="todo in todos" :key="todo.id">
+		<div class="title">{{ todo.title }}</div>
+		<input type="button" value="标为完成">
+		<input type="button" value="删除">
+		<input type="text" value="编辑 todo..."/>
+	</div>
+
+	<!-- end todo list -->
+	<div>
+		<span>剩余 3 项未完成 ---</span>
+		<span>筛选：
+			<input type="button" class="selected" value="全部">
+			<input type="button" value="进行中">
+			<input type="button" value="已完成">
+			<input type="button" value="清除已完成">
+			<input type="button" value="清除全部">
+		</span>
+	</div>
+</div>
+<script src="../js/vue.js"></script>
+<script>
+	let app = new Vue({
+		el: '#todo-app',
+		data: function () {
+			return {
+				todos: [
+					{id: 0, title: "学习 Vue"},
+					{id: 1, title: "赚钱"},
+					{id: 2, title: "娶冰冰"},
+				],
+				newTodoTitle: ""
+			}
+		},
+		methods: {
+			addTodo: function () {
+
+			}
+		}
+	})
+</script>
+</body>
+</html>
