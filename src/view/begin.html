@@ -2,19 +2,19 @@
 <html lang="zh">
 <head>
 	<meta charset="UTF-8">
-	<title>todo list</title>
+	<title>vue begin</title>
 	<style>
-        .empty{
+        .emptyCss{
             border-color: red;
         }
 	</style>
 </head>
 <body>
 <div id="app">
-	<input type="text" v-model="value" v-bind:class="{empty: !count}">
-	<input type="button" value="发送" v-on:click="sendMsg">
-	<div>value的值是{{ value }}</div>
-	<div>字数：{{ count }}</div>
+	<input v-model="value" v-bind:class="{'emptyCss': !count}">
+	<input type="button" v-on:click="sendMsg" value="发送">
+	<div>value的值是: {{ value }}</div>
+	<div v-if="count">字数：{{ count }}</div>
 </div>
 </body>
 <script src="../js/vue.js"></script>
