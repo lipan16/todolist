@@ -4,6 +4,10 @@
 	<meta charset="UTF-8">
 	<title>todo list</title>
 	<style>
+        .empty {
+            border-color: red;
+        }
+
         .completed {
             text-decoration: line-through;
         }
@@ -17,7 +21,7 @@
             display: flex;
         }
 
-        .title {
+        .titleCss {
             width: 100px;
         }
 	</style>
@@ -25,16 +29,24 @@
 <body>
 <div id="todo-app">
 	<div>
-		<input type="button" value="全部标为完成"/>
-		<input type="text" placeholder="添加 todo" v-model="newTodoTitle" @keyup.enter="addTodo"/>
+		<input type="button" value="全部标为完成">
+		<input type="text" placeholder="添加 todo"
+			   v-model="newTodoTitle"
+			   @keyup.enter="addTodo"
+			   :class="{empty: emptyCheck}">
+		<span v-if="emptyCheck" style="color: red">请输入内容</span>
 	</div>
 
 	<!-- todo list -->
 	<div class="todoList" v-for="todo in todos" :key="todo.id">
-		<div class="title">{{ todo.title }}</div>
-		<input type="button" value="标为完成">
+		<div :class="{titleCss: true,completed: todo.completed}">{{ todo.title }}</div>
+		<input type="button" value="标为完成"
+			   v-on:click="markAsCompleted(todo)"
+			   v-if="!todo.completed">
+		<input type="button" value="标为未完成" v-else
+			   v-on:click="markAsUncompleted(todo)">
 		<input type="button" value="删除">
-		<input type="text" value="编辑 todo..."/>
+		<input type="text" value="编辑 todo...">
 	</div>
 
 	<!-- end todo list -->
@@ -51,21 +63,40 @@
 </div>
 <script src="../js/vue.js"></script>
 <script>
+	let id = 3;
 	let app = new Vue({
 		el: '#todo-app',
 		data: function () {
 			return {
 				todos: [
-					{id: 0, title: "学习 Vue"},
-					{id: 1, title: "赚钱"},
-					{id: 2, title: "娶冰冰"},
+					{id: 0, title: "学习 Vue", completed: false},
+					{id: 1, title: "赚钱", completed: false},
+					{id: 2, title: "娶冰冰", completed: false}
 				],
-				newTodoTitle: ""
+				newTodoTitle: "",
+				checkEmpty: false
 			}
 		},
 		methods: {
-			addTodo: function () {
-
+			addTodo: function () {//增加todo list
+				if (this.newTodoTitle.length > 0) {
+					this.todos.push({id: id++, title: this.newTodoTitle, completed: false})
+					this.newTodoTitle = ""
+					this.checkEmpty = false
+				} else {
+					this.checkEmpty = true
+				}
+			},
+			markAsCompleted: function (todo) {//标为完成
+				todo.completed = true
+			},
+			markAsUncompleted: function (todo) {
+				todo.completed = false;
+			}
+		},
+		computed: {
+			emptyCheck: function () {
+				return this.newTodoTitle.length === 0 && this.checkEmpty
 			}
 		}
 	})
