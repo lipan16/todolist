@@ -83,9 +83,9 @@
         data: function(){//数据
             return {
                 todos: [
-                    {id: 0, title: "学习 Vue", completed: false},
-                    {id: 1, title: "赚钱", completed: false},
-                    {id: 2, title: "娶冰冰", completed: false},
+                    {id: 0, title: "学习 Vue", completed: false, removed: false},
+                    {id: 1, title: "赚钱", completed: false, removed: false},
+                    {id: 2, title: "娶冰冰", completed: false, removed: false},
                 ],//todo list
                 newTodoTitle: "",//todo title
                 checkEmpty: false,//添加todo回车时是否空
@@ -98,7 +98,7 @@
         methods: {//方法
             addTodo: function(){//增加todo list
                 if(this.newTodoTitle.length > 0){
-                    this.todos.push({id: id++, title: this.newTodoTitle, completed: false})
+                    this.todos.push({id: id++, title: this.newTodoTitle, completed: false, removed: false})
                     this.newTodoTitle = ""
                     this.checkEmpty = false
                 }else{
@@ -136,12 +136,14 @@
                     pos: pos,
                     todo: this.todos.splice(pos, 1)[0],//获取删除的todo
                 }
+                removedTodo.todo.removed = true
                 this.removedTodoStack.push(removedTodo)//删除的todo入栈
             },
             restoreTodo: function(){//撤销删除
                 let todo = this.removedTodoStack.pop()//出栈
                 let pos = todo.pos//位置
                 let restored = todo.todo//todo
+                restored.removed = false
                 this.todos.splice(pos, 0, restored)//插入到todos中并显示
             },
             editTodo: function(todo){//编辑todo
@@ -164,6 +166,8 @@
                 this.todos = this.todos.filter(todo => !todo.completed)//筛选出未完成的todo
             },
             clearAll: function(){//清除所有todo
+                this.todos.map(todo => todo.removed = true);
+                this.removedTodoStack.unshift(...this.todos)
                 this.todos = []
             },
         },
